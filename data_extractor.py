@@ -25,9 +25,10 @@ def extract_message_replies(connection: sqlite3.Connection):
         )
 
         INSERT INTO message_replies(message_id, replies_count)
-        SELECT reply_to_msg_id, COUNT(*) FROM answer
+        SELECT reply_to_msg_id as message_id, COUNT(*) as replies_count FROM answer
         WHERE reply_to_msg_id IN unique_ids AND text != ""
         GROUP BY reply_to_msg_id
+        RIGHT JOIN unique_ids ON unique_ids.message_id = reply_to_msg_id ; -- add 0 to replies_count if there are not items
         """
     )
 
